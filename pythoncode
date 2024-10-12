@@ -1,0 +1,51 @@
+import random
+
+class AlgoritmoSubstituicaoPagina:
+    def __init__(self, string_referencia_pagina, num_quadros):
+        self.string_referencia_pagina = string_referencia_pagina
+        self.num_quadros = num_quadros
+        self.quadros = []
+        self.falhas_pagina = 0
+
+    def fifo(self):
+        for pagina in self.string_referencia_pagina:
+            if pagina not in self.quadros:
+                if len(self.quadros) == self.num_quadros:
+                    self.quadros.pop(0)
+                self.quadros.append(pagina)
+                self.falhas_pagina += 1
+        return self.falhas_pagina
+
+    def lru(self):
+        for pagina in self.string_referencia_pagina:
+            if pagina not in self.quadros:
+                if len(self.quadros) == self.num_quadros:
+                    pagina_lru = min(self.quadros, key=self.quadros.index)
+                    self.quadros.remove(pagina_lru)
+                self.quadros.append(pagina)
+                self.falhas_pagina += 1
+        return self.falhas_pagina
+
+    def imprimir_resultados(self, nome_algoritmo, falhas_pagina):
+        print(f"Algoritmo: {nome_algoritmo}")
+        print(f"Número de Quadros: {self.num_quadros}")
+        print(f"Falhas de Página: {falhas_pagina}")
+        print()
+
+def gerar_string_referencia_pagina_aleatoria(tamanho):
+    return [random.randint(0, 9) for _ in range(tamanho)]
+
+def main():
+    string_referencia_pagina = gerar_string_referencia_pagina_aleatoria(20)
+    print("String de Referência de Página:", string_referencia_pagina)
+
+    num_quadros_lista = [3, 5, 7]
+    for num_quadros in num_quadros_lista:
+        algoritmo = AlgoritmoSubstituicaoPagina(string_referencia_pagina, num_quadros)
+        fifo_falhas_pagina = algoritmo.fifo()
+        lru_falhas_pagina = algoritmo.lru()
+        algoritmo.imprimir_resultados("FIFO", fifo_falhas_pagina)
+        algoritmo.imprimir_resultados("LRU", lru_falhas_pagina)
+
+if __name__ == "__main__":
+    main()
